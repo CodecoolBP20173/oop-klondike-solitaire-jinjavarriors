@@ -78,7 +78,7 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        //TODO
+
         return true;
     }
 
@@ -120,6 +120,14 @@ public class Card extends ImageView {
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
             }
+        }
+    }
+    public String getCardColor(){
+        if(suit == 1 || suit == 2 ){
+            return "red";
+        }
+        else{
+            return "black";
         }
     }
 

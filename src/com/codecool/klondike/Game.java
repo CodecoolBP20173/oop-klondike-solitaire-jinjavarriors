@@ -111,7 +111,6 @@ public class Game extends Pane {
     }
 
     public boolean isMoveValid(Card card, Pile destPile) {
-        //TODO
         return true;
     }
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
