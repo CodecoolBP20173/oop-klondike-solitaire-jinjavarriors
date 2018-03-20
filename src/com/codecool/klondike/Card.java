@@ -78,8 +78,11 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        //TODO
-        return true;
+        if (card1.getCardColor() != card2.getCardColor()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -121,6 +124,47 @@ public class Card extends ImageView {
                 cardFaceImages.put(cardId, new Image(imageFileName));
             }
         }
+    }
+
+    private String getCardColor() {
+        if (suit == 1 || suit == 2) {
+            return "red";
+        } else {
+            return "black";
+        }
+    }
+
+    public static boolean isAdjacent(Card draggedCard, Card topCard, Pile.PileType pileType) {
+        boolean adjacentFlag = false;
+        switch (pileType) {
+            case FOUNDATION:
+                if (draggedCard.getRank() == topCard.getRank() + 1) {
+                    adjacentFlag = true;
+                }
+                break;
+            case TABLEAU:
+                if (draggedCard.getRank() == topCard.getRank() - 1) {
+                    adjacentFlag = true;
+                }
+                break;
+        }
+        return adjacentFlag;
+    }
+
+    public boolean isHighestRank(Pile.PileType pileType) {
+        switch (pileType) {
+            case TABLEAU:
+                if (this.getRank() == 13) {
+                    return true;
+                }
+                break;
+            case FOUNDATION:
+                if (this.getRank() == 1) {
+                    return true;
+                }
+                break;
+        }
+        return false;
     }
 
 }
