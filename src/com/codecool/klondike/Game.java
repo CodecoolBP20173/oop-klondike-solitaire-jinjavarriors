@@ -114,6 +114,7 @@ public class Game extends Pane {
         //TODO
         return true;
     }
+
     private Pile getValidIntersectingPile(Card card, List<Pile> piles) {
         Pile result = null;
         for (Pile pile : piles) {
@@ -189,6 +190,16 @@ public class Game extends Pane {
             getChildren().add(card);
         });
 
+        for (int i = 0; i < tableauPiles.size(); i++) {
+            Pile currentPile = tableauPiles.get(i);
+
+            for (int j = 0; j < i; j++) {
+                stockPile.getTopCard().moveToPile(currentPile);
+            }
+            Card topCard = stockPile.getTopCard();
+            topCard.flip();
+            topCard.moveToPile(currentPile);
+        }
     }
 
     public void setTableBackground(Image tableBackground) {
