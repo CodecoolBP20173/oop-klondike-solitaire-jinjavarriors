@@ -65,15 +65,22 @@ public class Game extends Pane {
         double offsetY = e.getSceneY() - dragStartY;
 
         draggedCards.clear();
-        draggedCards.add(card);
+        boolean groupCards = false;
+        for (Card actualCard : activePile.getCards()) {
+            if (card.equals(actualCard)){
+                groupCards = true;
+            }
+            if (groupCards) {
+                draggedCards.add(actualCard);
+                actualCard.getDropShadow().setRadius(20);
+                actualCard.getDropShadow().setOffsetX(10);
+                actualCard.getDropShadow().setOffsetY(10);
 
-        card.getDropShadow().setRadius(20);
-        card.getDropShadow().setOffsetX(10);
-        card.getDropShadow().setOffsetY(10);
-
-        card.toFront();
-        card.setTranslateX(offsetX);
-        card.setTranslateY(offsetY);
+                actualCard.toFront();
+                actualCard.setTranslateX(offsetX);
+                actualCard.setTranslateY(offsetY);
+            }
+        }
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
