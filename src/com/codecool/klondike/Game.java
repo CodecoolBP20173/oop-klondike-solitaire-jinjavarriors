@@ -6,6 +6,8 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
+import javafx.event.ActionEvent;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -113,9 +115,15 @@ public class Game extends Pane {
 
     public Game() {
         deck = Card.createNewDeck();
-        Collections.shuffle(deck);
-        initPiles();
-        dealCards();
+        initBoard();
+    }
+
+    private void flipCardsDown(List<Card> deck) {
+        for (Card card : deck) {
+            if (!card.isFaceDown()) {
+                card.flip();
+            }
+        }
     }
 
     public void addMouseEventHandlers(Card card) {
@@ -184,6 +192,36 @@ public class Game extends Pane {
         draggedCards.clear();
     }
 
+    private void initBoard() {
+        getChildren().clear();
+        Collections.shuffle(deck);
+        flipCardsDown(deck);
+        initPiles();
+        dealCards();
+        initButtons();
+    }
+
+    private void initButtons() {
+        Button restartBtn = new Button();
+        restartBtn.setText("Restart");
+        getChildren().add(restartBtn);
+        restartBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                for (Pile pile : foundationPiles) {
+                    pile.clear();
+                }
+                for (Pile pile : tableauPiles) {
+                    pile.clear();
+                }
+                tableauPiles.clear();
+                foundationPiles.clear();
+                stockPile.clear();
+                discardPile.clear();
+                initBoard();
+            }
+        });
+    }
 
     private void initPiles() {
         stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
@@ -237,6 +275,10 @@ public class Game extends Pane {
                 addMouseEventHandlers(card);
                 getChildren().add(card);
             });
+        }
+        for (int i = 0; i < tableauPiles.size(); i++) {
+            Pile currentPile = tableauPiles.get(i);
+            currentPile.addChangeListener();
         }
     }
 
