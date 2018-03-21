@@ -118,6 +118,14 @@ public class Game extends Pane {
         initBoard();
     }
 
+    private void flipCardsDown(List<Card> deck) {
+        for (Card card : deck) {
+            if (!card.isFaceDown()) {
+                card.flip();
+            }
+        }
+    }
+
     public void addMouseEventHandlers(Card card) {
         card.setOnMousePressed(onMousePressedHandler);
         card.setOnMouseDragged(onMouseDraggedHandler);
@@ -183,32 +191,38 @@ public class Game extends Pane {
         MouseUtil.slideToDest(draggedCards, destPile);
         draggedCards.clear();
     }
-    private void initBoard(){
+
+    private void initBoard() {
         getChildren().clear();
         Collections.shuffle(deck);
+        flipCardsDown(deck);
         initPiles();
         dealCards();
         initButtons();
     }
-    private void initButtons(){
+
+    private void initButtons() {
         Button restartBtn = new Button();
         restartBtn.setText("Restart");
         getChildren().add(restartBtn);
         restartBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                for(Pile pile:foundationPiles){
+                for (Pile pile : foundationPiles) {
                     pile.clear();
                 }
-                for(Pile pile:tableauPiles){
+                for (Pile pile : tableauPiles) {
                     pile.clear();
                 }
+                tableauPiles.clear();
+                foundationPiles.clear();
                 stockPile.clear();
                 discardPile.clear();
                 initBoard();
             }
         });
     }
+
     private void initPiles() {
         stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
         stockPile.setBlurredBackground();
@@ -261,6 +275,10 @@ public class Game extends Pane {
                 addMouseEventHandlers(card);
                 getChildren().add(card);
             });
+        }
+        for (int i = 0; i < tableauPiles.size(); i++) {
+            Pile currentPile = tableauPiles.get(i);
+            currentPile.addChangeListener();
         }
     }
 
