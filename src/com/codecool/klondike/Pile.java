@@ -1,7 +1,9 @@
 package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -22,6 +24,10 @@ public class Pile extends Pane {
     public Pile(PileType pileType, String name, double cardGap) {
         this.pileType = pileType;
         this.cardGap = cardGap;
+    }
+    public void addChangeListener() {
+        cards.addListener(Pile::onCardsChange);
+
     }
 
     public PileType getPileType() {
@@ -86,6 +92,20 @@ public class Pile extends Pane {
 
     public void reverseOrderOfCards() {
         Collections.reverse(cards);
+    }
+
+    private static void onCardsChange(ListChangeListener.Change<? extends Card> change) {
+        change.next();
+        if (change.wasRemoved()) {
+            int lastIndexOf = change.getList().size() - 1;
+            if (lastIndexOf >= 0) {
+                Card topCard = change.getList().get(lastIndexOf);
+                if (topCard.isFaceDown()) {
+                    topCard.flip();
+                }
+            }
+
+        }
     }
 
     public enum PileType {
