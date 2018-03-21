@@ -94,10 +94,10 @@ public class Game extends Pane {
 
     public boolean isGameWon() {
         int foundationCards = 0;
-        for(Pile pile:foundationPiles){
-           foundationCards += pile.numOfCards();
+        for (Pile pile : foundationPiles) {
+            foundationCards += pile.numOfCards();
         }
-        if(foundationCards == 52){
+        if (foundationCards == 52) {
             return true;
         }
         return false;
@@ -180,6 +180,11 @@ public class Game extends Pane {
         System.out.println(msg);
         MouseUtil.slideToDest(draggedCards, destPile);
         draggedCards.clear();
+
+        boolean restart;
+        if (isGameWon()) {
+            restart = AlertBox.display("Winner", "You have won! Wanna play again?");
+        }
     }
 
 
