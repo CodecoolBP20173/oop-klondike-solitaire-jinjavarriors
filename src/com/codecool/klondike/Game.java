@@ -143,8 +143,10 @@ public class Game extends Pane {
         } else {
             if (pileType == Pile.PileType.TABLEAU) {
                 return (Card.isOppositeColor(card, topCard) && Card.isAdjacent(card, topCard, pileType));
+            } else if (pileType == Pile.PileType.FOUNDATION) {
+                return (Card.isSameSuit(card, topCard) && Card.isAdjacent(card, topCard, pileType));
             } else {
-                return (Card.isOppositeColor(card, topCard) && Card.isAdjacent(card, topCard, pileType));
+                return false;
             }
         }
     }
