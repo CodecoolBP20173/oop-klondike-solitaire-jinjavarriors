@@ -108,10 +108,7 @@ public class Game extends Pane {
         for(Pile pile:foundationPiles){
            foundationCards += pile.numOfCards();
         }
-        if(foundationCards == 52){
-            return true;
-        }
-        return false;
+        return (foundationCards == 52);
     }
 
     public Game() {
@@ -142,21 +139,13 @@ public class Game extends Pane {
         Card topCard = destPile.getTopCard();
         Pile.PileType pileType = destPile.getPileType();
         if (destPile.isEmpty()) {
-            if (card.isHighestRank(pileType)) {
-                return true;
-            }
-            return false;
+            return (card.isHighestRank(pileType));
         } else {
             if (pileType == Pile.PileType.TABLEAU) {
-                if (Card.isOppositeColor(card, topCard) && Card.isAdjacent(card, topCard, pileType)) {
-                    return true;
-                }
+                return (Card.isOppositeColor(card, topCard) && Card.isAdjacent(card, topCard, pileType));
             } else {
-                if (!Card.isOppositeColor(card, topCard) && Card.isAdjacent(card, topCard, pileType)) {
-                    return true;
-                }
+                return (Card.isOppositeColor(card, topCard) && Card.isAdjacent(card, topCard, pileType));
             }
-            return false;
         }
     }
 
@@ -228,7 +217,6 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        //TODO
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
             addMouseEventHandlers(card);
