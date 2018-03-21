@@ -93,7 +93,13 @@ public class Game extends Pane {
     };
 
     public boolean isGameWon() {
-        //TODO
+        int foundationCards = 0;
+        for(Pile pile:foundationPiles){
+           foundationCards += pile.numOfCards();
+        }
+        if(foundationCards == 52){
+            return true;
+        }
         return false;
     }
 
