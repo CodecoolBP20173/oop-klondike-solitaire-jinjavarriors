@@ -9,8 +9,8 @@ import java.util.*;
 
 public class Card extends ImageView {
 
-    private int suit;
-    private int rank;
+    private Suit suit;
+    private Rank rank;
     private boolean faceDown;
 
     private Image backFace;
@@ -23,7 +23,7 @@ public class Card extends ImageView {
     public static final int WIDTH = 150;
     public static final int HEIGHT = 215;
 
-    public Card(int suit, int rank, boolean faceDown) {
+    public Card(Suit suit, Rank rank, boolean faceDown) {
         this.suit = suit;
         this.rank = rank;
         this.faceDown = faceDown;
@@ -34,11 +34,11 @@ public class Card extends ImageView {
         setEffect(dropShadow);
     }
 
-    public int getSuit() {
+    public Suit getSuit() {
         return suit;
     }
 
-    public int getRank() {
+    public Rank getRank() {
         return rank;
     }
 
@@ -78,11 +78,7 @@ public class Card extends ImageView {
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
-        if (card1.getCardColor() != card2.getCardColor()) {
-            return true;
-        } else {
-            return false;
-        }
+        return (!(card1.getCardColor().equals(card2.getCardColor())));
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -91,8 +87,8 @@ public class Card extends ImageView {
 
     public static List<Card> createNewDeck() {
         List<Card> result = new ArrayList<>();
-        for (int suit = 1; suit < 5; suit++) {
-            for (int rank = 1; rank < 14; rank++) {
+        for (Suit suit : Suit.values()) {
+            for (Rank rank : Rank.values()) {
                 result.add(new Card(suit, rank, true));
             }
         }
@@ -102,23 +98,23 @@ public class Card extends ImageView {
     public static void loadCardImages() {
         cardBackImage = new Image("card_images/card_back.png");
         String suitName = "";
-        for (int suit = 1; suit < 5; suit++) {
+        for (Suit suit : Suit.values()) {
             switch (suit) {
-                case 1:
+                case HEARTS:
                     suitName = "hearts";
                     break;
-                case 2:
+                case DIAMONDS:
                     suitName = "diamonds";
                     break;
-                case 3:
+                case SPADES:
                     suitName = "spades";
                     break;
-                case 4:
+                case CLUBS:
                     suitName = "clubs";
                     break;
             }
-            for (int rank = 1; rank < 14; rank++) {
-                String cardName = suitName + rank;
+            for (Rank rank : Rank.values()) {
+                String cardName = suitName + rank.value;
                 String cardId = "S" + suit + "R" + rank;
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
@@ -127,23 +123,29 @@ public class Card extends ImageView {
     }
 
     private String getCardColor() {
-        if (suit == 1 || suit == 2) {
-            return "red";
-        } else {
-            return "black";
-        }
+        switch (suit) {
+            case HEARTS:
+                return "red";
+            case DIAMONDS:
+                return "red";
+            case SPADES:
+                return "black";
+            case CLUBS:
+                return "black";
+            }
+        return "";
     }
 
     public static boolean isAdjacent(Card draggedCard, Card topCard, Pile.PileType pileType) {
         boolean adjacentFlag = false;
         switch (pileType) {
             case FOUNDATION:
-                if (draggedCard.getRank() == topCard.getRank() + 1) {
+                if (draggedCard.getRank().value == topCard.getRank().value + 1) {
                     adjacentFlag = true;
                 }
                 break;
             case TABLEAU:
-                if (draggedCard.getRank() == topCard.getRank() - 1) {
+                if (draggedCard.getRank().value == topCard.getRank().value - 1) {
                     adjacentFlag = true;
                 }
                 break;
@@ -154,17 +156,50 @@ public class Card extends ImageView {
     public boolean isHighestRank(Pile.PileType pileType) {
         switch (pileType) {
             case TABLEAU:
-                if (this.getRank() == 13) {
+                if (this.getRank() == Rank.KING) {
                     return true;
                 }
                 break;
             case FOUNDATION:
-                if (this.getRank() == 1) {
+                if (this.getRank() == Rank.ACE) {
                     return true;
                 }
                 break;
         }
         return false;
+    }
+
+    public enum Rank {
+        ACE (1),
+        DEUCE (2),
+        THREE (3),
+        FOUR (4),
+        FIVE (5),
+        SIX (6),
+        SEVEN (7),
+        EIGHT (8),
+        NINE (9),
+        TEN (10),
+        JACK (11),
+        QUEEN (12),
+        KING (13);
+
+        private final int value;
+
+        Rank (int value) {
+            this.value = value;
+        }
+
+        public int value() {
+            return value;
+        }
+    }
+
+    public enum Suit {
+        HEARTS,
+        DIAMONDS,
+        SPADES,
+        CLUBS
     }
 
 }
