@@ -184,6 +184,11 @@ public class Game extends Pane {
         boolean restart;
         if (isGameWon()) {
             restart = AlertBox.display("Winner", "You have won! Wanna play again?");
+            if (restart) {
+                initBoard();
+            } else {
+                System.exit(1);
+            }
         }
     }
 
