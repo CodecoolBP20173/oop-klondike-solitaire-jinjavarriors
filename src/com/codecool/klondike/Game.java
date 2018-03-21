@@ -70,7 +70,7 @@ public class Game extends Pane {
         draggedCards.clear();
         boolean groupCards = false;
         for (Card actualCard : activePile.getCards()) {
-            if (card.equals(actualCard)){
+            if (card.equals(actualCard)) {
                 groupCards = true;
             }
             if (groupCards) {
@@ -105,8 +105,8 @@ public class Game extends Pane {
 
     public boolean isGameWon() {
         int foundationCards = 0;
-        for(Pile pile:foundationPiles){
-           foundationCards += pile.numOfCards();
+        for (Pile pile : foundationPiles) {
+            foundationCards += pile.numOfCards();
         }
         return (foundationCards == 52);
     }
@@ -219,28 +219,25 @@ public class Game extends Pane {
 
     public void dealCards() {
         Iterator<Card> deckIterator = deck.iterator();
-        deckIterator.forEachRemaining(card -> {
-            stockPile.addCard(card);
-            addMouseEventHandlers(card);
-            getChildren().add(card);
-        });
-
-        for (int i = 0; i < tableauPiles.size(); i++) {
-            Pile currentPile = tableauPiles.get(i);
-
-            for (int j = 0; j < i; j++) {
-                stockPile.getTopCard().moveToPile(currentPile);
+        while (deckIterator.hasNext()) {
+            for (int i = 0; i < tableauPiles.size(); i++) {
+                Pile currentPile = tableauPiles.get(i);
+                for (int j = 0; j < i + 1; j++) {
+                    Card currentCard = deckIterator.next();
+                    currentPile.addCard(currentCard);
+                    addMouseEventHandlers(currentCard);
+                    getChildren().add(currentCard);
+                }
+                Card topCard = currentPile.getTopCard();
+                topCard.flip();
             }
-            Card topCard = stockPile.getTopCard();
-            topCard.flip();
-            topCard.moveToPile(currentPile);
-        }
 
-        for (int i = 0; i < tableauPiles.size(); i++) {
-            Pile currentPile = tableauPiles.get(i);
-            currentPile.addChangeListener();
+            deckIterator.forEachRemaining(card -> {
+                stockPile.addCard(card);
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            });
         }
-
     }
 
     public void setTableBackground(Image tableBackground) {
