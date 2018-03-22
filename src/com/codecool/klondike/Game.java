@@ -208,7 +208,7 @@ public class Game extends Pane {
                     slider.add(card);
                     try
                     {
-                        Thread.sleep(100);
+                        Thread.sleep(5);
                     }
                     catch(InterruptedException ex)
                     {
@@ -228,11 +228,14 @@ public class Game extends Pane {
         initPiles();
         dealCards();
         initButtons();
+        demoButton();
     }
 
     private void initButtons() {
         Button restartBtn = new Button();
         restartBtn.setText("Restart");
+        restartBtn.setLayoutX(5);
+        restartBtn.setLayoutY(5);
         getChildren().add(restartBtn);
         restartBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -250,6 +253,76 @@ public class Game extends Pane {
                 initBoard();
             }
         });
+    }
+
+    private void demoButton() {
+        Button demoBtn = new Button();
+        demoBtn.setText("Demo");
+        demoBtn.setLayoutX(5);
+        demoBtn.setLayoutY(40);
+        getChildren().add(demoBtn);
+
+        demoBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                for (Pile pile : foundationPiles) {
+                    pile.clear();
+                }
+                for (Pile pile : tableauPiles) {
+                    pile.clear();
+                }
+                tableauPiles.clear();
+                foundationPiles.clear();
+                stockPile.clear();
+                discardPile.clear();
+                setDemoBoard();
+            }
+        });
+    }
+
+    private void setDemoBoard() {
+        getChildren().clear();
+        deck = Card.createNewDeck();
+        flipCardsDown(deck);
+        initPiles();
+        dealDemoCards();
+        initButtons();
+        demoButton();
+    }
+
+    private void dealDemoCards() {
+        Iterator<Card> deckIterator = deck.iterator();
+
+        while (deckIterator.hasNext()) {
+
+            for (int i = 0; i < foundationPiles.size() - 1; i++) {
+                Pile currentPile = foundationPiles.get(i);
+                for (int j = 0; j < 13; j++) {
+                    Card currentCard = deckIterator.next();
+                    currentCard.flip();
+                    currentPile.addCard(currentCard);
+                    addMouseEventHandlers(currentCard);
+                    getChildren().add(currentCard);
+                }
+            }
+
+            Pile currentPile = foundationPiles.get(3);
+            for (int j = 0; j < 12; j++) {
+                Card currentCard = deckIterator.next();
+                currentCard.flip();
+                currentPile.addCard(currentCard);
+                addMouseEventHandlers(currentCard);
+                getChildren().add(currentCard);
+            }
+
+            deckIterator.forEachRemaining(card -> {
+                tableauPiles.get(0).addCard(card);
+                card.flip();
+                addMouseEventHandlers(card);
+                getChildren().add(card);
+            });
+
+        }
     }
 
     private void initPiles() {
