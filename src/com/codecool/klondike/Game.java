@@ -112,7 +112,7 @@ public class Game extends Pane {
         for (Pile pile : foundationPiles) {
             foundationCards += pile.numOfCards();
         }
-        return (foundationCards == 1);
+        return (foundationCards == 52);
     }
 
     public Game() {
