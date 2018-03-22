@@ -25,6 +25,7 @@ public class Pile extends Pane {
         this.pileType = pileType;
         this.cardGap = cardGap;
     }
+
     public void addChangeListener() {
         cards.addListener(Pile::onCardsChange);
 

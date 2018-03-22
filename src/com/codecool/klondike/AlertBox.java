@@ -8,38 +8,28 @@ import javafx.geometry.*;
 
 public class AlertBox {
 
-    static boolean restart;
-
-    public static boolean display(String title, String message) {
+    public static void display(String title, String message) {
         Stage window = new Stage();
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(100);
+        window.setMinWidth(200);
 
         Label label = new Label();
         label.setText(message);
 
-        Button noButton = new Button("No");
-        noButton.setOnAction(e -> {
-            restart = false;
-            window.close();
-        });
-
-        Button yesButton = new Button("Yes");
-        yesButton.setOnAction(e -> {
-            restart = true;
+        Button exitButton = new Button("Exit game");
+        exitButton.setOnAction(e -> {
+            System.exit(1);
         });
 
         VBox layout = new VBox(10);
-        layout.getChildren().addAll(label, noButton, yesButton);
+        layout.getChildren().addAll(label, exitButton);
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
         window.setScene(scene);
-        window.showAndWait();
-
-        return restart;
+        window.show();
     }
 }
 
