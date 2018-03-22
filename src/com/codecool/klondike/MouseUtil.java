@@ -33,7 +33,7 @@ public class MouseUtil {
                 });
     }
 
-    public static void slideToDest(List<Card> cardsToSlide, Pile destPile) {
+    public static void slideToDest(List<Card> cardsToSlide, Pile destPile, int speed) {
         if (cardsToSlide == null)
             return;
         double destCardGap = destPile.getCardGap();
@@ -54,7 +54,7 @@ public class MouseUtil {
             double sourceY = currentCard.getLayoutY() + currentCard.getTranslateY();
 
             animateCardMovement(currentCard, sourceX, sourceY, targetX,
-                    targetY + ((destPile.isEmpty() ? i : i + 1) * destCardGap), Duration.millis(300),
+                    targetY + ((destPile.isEmpty() ? i : i + 1) * destCardGap), Duration.millis(speed),
                     e -> {
                         currentCard.moveToPile(destPile);
                         currentCard.getDropShadow().setRadius(2);

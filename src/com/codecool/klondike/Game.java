@@ -1,10 +1,7 @@
 package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
-import javafx.event.Event;
-import javafx.scene.control.Alert;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -116,7 +113,7 @@ public class Game extends Pane {
         for (Pile pile : foundationPiles) {
             foundationCards += pile.numOfCards();
         }
-        return (foundationCards == 2);
+        return (foundationCards == 52);
     }
 
     public Game() {
@@ -199,7 +196,7 @@ public class Game extends Pane {
             msg = String.format("Placed %s to %s.", card, destPile.getTopCard());
         }
         System.out.println(msg);
-        MouseUtil.slideToDest(draggedCards, destPile);
+        MouseUtil.slideToDest(draggedCards, destPile, 300);
         draggedCards.clear();
     }
 
@@ -209,7 +206,15 @@ public class Game extends Pane {
                 for (Card card : pile.getCards()) {
                     List<Card> slider = FXCollections.observableArrayList();
                     slider.add(card);
-                    MouseUtil.slideToDest(slider, endPile);
+                    try
+                    {
+                        Thread.sleep(100);
+                    }
+                    catch(InterruptedException ex)
+                    {
+                        Thread.currentThread().interrupt();
+                    }
+                    MouseUtil.slideToDest(slider, endPile, 900);
                 }
             }
             AlertBox.display("Winner", "Congratulations! You have won!");
@@ -278,7 +283,6 @@ public class Game extends Pane {
             getChildren().add(tableauPile);
         }
         endPile = new Pile(Pile.PileType.END, "End", FOUNDATION_GAP);
-        endPile.setBlurredBackground();
         endPile.setLayoutX(610);
         endPile.setLayoutY(640);
         endPile.setOnMouseClicked(stockReverseCardsHandler);
