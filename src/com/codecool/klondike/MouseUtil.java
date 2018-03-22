@@ -61,8 +61,11 @@ public class MouseUtil {
                         currentCard.getDropShadow().setOffsetX(0);
                         currentCard.getDropShadow().setOffsetY(0);
                         game.draggedCards.remove(currentCard);
+                        Game.game.checkWin();
                     });
+
         }
+
     }
 
     private static void animateCardMovement(
