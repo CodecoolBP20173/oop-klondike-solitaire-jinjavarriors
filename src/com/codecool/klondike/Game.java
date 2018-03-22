@@ -2,7 +2,6 @@ package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
@@ -37,6 +36,8 @@ public class Game extends Pane {
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
+
+    public static Game game;
 
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
@@ -99,6 +100,7 @@ public class Game extends Pane {
         pile = getValidIntersectingPile(card, allPiles);
         if (pile != null) {
             handleValidMove(card, pile);
+
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
             draggedCards.clear();
@@ -114,6 +116,7 @@ public class Game extends Pane {
     }
 
     public Game() {
+        game = this;
         deck = Card.createNewDeck();
         initBoard();
     }
@@ -194,6 +197,12 @@ public class Game extends Pane {
         System.out.println(msg);
         MouseUtil.slideToDest(draggedCards, destPile);
         draggedCards.clear();
+    }
+
+    public void checkWin() {
+        if (isGameWon()) {
+            AlertBox.display("Winner", "Congratulations! You have won!");
+        }
     }
 
     private void initBoard() {
