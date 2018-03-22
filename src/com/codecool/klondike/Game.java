@@ -32,12 +32,12 @@ public class Game extends Pane {
     private List<Pile> tableauPiles = FXCollections.observableArrayList();
 
     private double dragStartX, dragStartY;
-    private List<Card> draggedCards = FXCollections.observableArrayList();
+    public List<Card> draggedCards = FXCollections.observableArrayList();
 
     private static double STOCK_GAP = 1;
     private static double FOUNDATION_GAP = 0;
     private static double TABLEAU_GAP = 30;
-
+    private boolean isDraggedCardsFull = false;
 
     private EventHandler<MouseEvent> onMouseClickedHandler = e -> {
         Card card = (Card) e.getSource();
@@ -54,6 +54,7 @@ public class Game extends Pane {
     };
 
     private EventHandler<MouseEvent> onMousePressedHandler = e -> {
+        isDraggedCardsFull = false;
         dragStartX = e.getSceneX();
         dragStartY = e.getSceneY();
     };
@@ -68,23 +69,26 @@ public class Game extends Pane {
         }
         double offsetX = e.getSceneX() - dragStartX;
         double offsetY = e.getSceneY() - dragStartY;
-
-        draggedCards.clear();
         boolean groupCards = false;
-        for (Card actualCard : activePile.getCards()) {
-            if (card.equals(actualCard)) {
-                groupCards = true;
+        if (!isDraggedCardsFull) {
+            for (Card actualCard : activePile.getCards()) {
+                if (card.equals(actualCard)) {
+                    groupCards = true;
+                }
+                if (groupCards) {
+                    draggedCards.add(actualCard);
+                }
             }
-            if (groupCards) {
-                draggedCards.add(actualCard);
-                actualCard.getDropShadow().setRadius(20);
-                actualCard.getDropShadow().setOffsetX(10);
-                actualCard.getDropShadow().setOffsetY(10);
+            isDraggedCardsFull = true;
+        }
+        for (Card actualCard : draggedCards) {
+            actualCard.getDropShadow().setRadius(20);
+            actualCard.getDropShadow().setOffsetX(10);
+            actualCard.getDropShadow().setOffsetY(10);
 
-                actualCard.toFront();
-                actualCard.setTranslateX(offsetX);
-                actualCard.setTranslateY(offsetY);
-            }
+            actualCard.toFront();
+            actualCard.setTranslateX(offsetX);
+            actualCard.setTranslateY(offsetY);
         }
     };
 
@@ -101,7 +105,6 @@ public class Game extends Pane {
             handleValidMove(card, pile);
         } else {
             draggedCards.forEach(MouseUtil::slideBack);
-            draggedCards.clear();
         }
     };
 
