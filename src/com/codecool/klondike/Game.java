@@ -144,7 +144,11 @@ public class Game extends Pane {
             if (pileType == Pile.PileType.TABLEAU) {
                 return (Card.isOppositeColor(card, topCard) && Card.isAdjacent(card, topCard, pileType));
             } else if (pileType == Pile.PileType.FOUNDATION) {
-                return (Card.isSameSuit(card, topCard) && Card.isAdjacent(card, topCard, pileType));
+                if (draggedCards.size() == 1) {
+                    return (Card.isSameSuit(card, topCard) && Card.isAdjacent(card, topCard, pileType));
+                } else {
+                    return false;
+                }
             } else {
                 return false;
             }
