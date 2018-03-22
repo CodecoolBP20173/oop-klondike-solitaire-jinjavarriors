@@ -29,6 +29,7 @@ public class Game extends Pane {
     private Pile discardPile;
     private List<Pile> foundationPiles = FXCollections.observableArrayList();
     private List<Pile> tableauPiles = FXCollections.observableArrayList();
+    private Pile endPile;
 
     private double dragStartX, dragStartY;
     public List<Card> draggedCards = FXCollections.observableArrayList();
@@ -115,7 +116,7 @@ public class Game extends Pane {
         for (Pile pile : foundationPiles) {
             foundationCards += pile.numOfCards();
         }
-        return (foundationCards == 52);
+        return (foundationCards == 2);
     }
 
     public Game() {
@@ -204,6 +205,13 @@ public class Game extends Pane {
 
     public void checkWin() {
         if (isGameWon()) {
+            for (Pile pile : foundationPiles) {
+                for (Card card : pile.getCards()) {
+                    List<Card> slider = FXCollections.observableArrayList();
+                    slider.add(card);
+                    MouseUtil.slideToDest(slider, endPile);
+                }
+            }
             AlertBox.display("Winner", "Congratulations! You have won!");
         }
     }
@@ -269,6 +277,12 @@ public class Game extends Pane {
             tableauPiles.add(tableauPile);
             getChildren().add(tableauPile);
         }
+        endPile = new Pile(Pile.PileType.END, "End", FOUNDATION_GAP);
+        endPile.setBlurredBackground();
+        endPile.setLayoutX(610);
+        endPile.setLayoutY(640);
+        endPile.setOnMouseClicked(stockReverseCardsHandler);
+        getChildren().add(endPile);
     }
 
     public void dealCards() {

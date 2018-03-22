@@ -113,6 +113,7 @@ public class Pile extends Pane {
         STOCK,
         DISCARD,
         FOUNDATION,
-        TABLEAU
+        TABLEAU,
+        END
     }
 }
