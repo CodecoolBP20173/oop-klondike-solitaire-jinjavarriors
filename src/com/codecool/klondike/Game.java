@@ -1,10 +1,7 @@
 package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
-import javafx.event.Event;
-import javafx.scene.control.Alert;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -29,6 +26,7 @@ public class Game extends Pane {
     private Pile discardPile;
     private List<Pile> foundationPiles = FXCollections.observableArrayList();
     private List<Pile> tableauPiles = FXCollections.observableArrayList();
+    private Pile endPile;
 
     private double dragStartX, dragStartY;
     public List<Card> draggedCards = FXCollections.observableArrayList();
@@ -198,12 +196,27 @@ public class Game extends Pane {
             msg = String.format("Placed %s to %s.", card, destPile.getTopCard());
         }
         System.out.println(msg);
-        MouseUtil.slideToDest(draggedCards, destPile);
+        MouseUtil.slideToDest(draggedCards, destPile, 300);
         draggedCards.clear();
     }
 
     public void checkWin() {
         if (isGameWon()) {
+            for (Pile pile : foundationPiles) {
+                for (Card card : pile.getCards()) {
+                    List<Card> slider = FXCollections.observableArrayList();
+                    slider.add(card);
+                    try
+                    {
+                        Thread.sleep(5);
+                    }
+                    catch(InterruptedException ex)
+                    {
+                        Thread.currentThread().interrupt();
+                    }
+                    MouseUtil.slideToDest(slider, endPile, 900);
+                }
+            }
             AlertBox.display("Winner", "Congratulations! You have won!");
         }
     }
@@ -342,6 +355,11 @@ public class Game extends Pane {
             tableauPiles.add(tableauPile);
             getChildren().add(tableauPile);
         }
+        endPile = new Pile(Pile.PileType.END, "End", FOUNDATION_GAP);
+        endPile.setLayoutX(610);
+        endPile.setLayoutY(640);
+        endPile.setOnMouseClicked(stockReverseCardsHandler);
+        getChildren().add(endPile);
     }
 
     public void dealCards() {
